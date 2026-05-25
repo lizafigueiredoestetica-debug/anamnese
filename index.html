@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ficha de Anamnese · Liza Figueiredo Estética</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background:#FDF7F9; color:#2C1A22; font-size:14px; }
+  .header { background:linear-gradient(135deg,#3D1A28,#6B3550); padding:2rem; text-align:center; color:white; }
+  .header h1 { font-size:24px; letter-spacing:3px; margin-bottom:4px; font-weight:300; }
+  .header h2 { font-size:12px; letter-spacing:4px; color:#F0C4D0; text-transform:uppercase; font-weight:400; }
+  .container { max-width:720px; margin:2rem auto; padding:0 1rem 4rem; }
+  .aviso { background:#FFF8E1; border-left:4px solid #C4708A; padding:1rem 1.2rem; border-radius:6px; margin-bottom:2rem; font-size:13px; color:#5D4037; line-height:1.6; }
+  .section-title { background:linear-gradient(135deg,#3D1A28,#6B3550); color:#F0C4D0; padding:0.6rem 1.2rem; border-radius:6px; font-size:11px; letter-spacing:3px; text-transform:uppercase; font-weight:600; margin:2rem 0 1rem; text-align:center; }
+  .form-group { margin-bottom:1rem; }
+  .form-group label { display:block; font-size:11px; font-weight:600; color:#6B3550; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+  .form-group input[type=text],
+  .form-group input[type=date],
+  .form-group input[type=number],
+  .form-group input[type=tel],
+  .form-group select,
+  .form-group textarea {
+    width:100%; padding:0.6rem 0.8rem; border:1px solid #F0D8E0; border-radius:8px;
+    font-family:inherit; font-size:14px; background:white; outline:none; color:#2C1A22;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:#C4708A; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media(max-width:500px){ .form-row{ grid-template-columns:1fr; } }
+  .question-block { background:white; border:1px solid #F0D8E0; border-radius:10px; padding:1rem 1.2rem; margin-bottom:0.75rem; }
+  .question-label { font-size:13px; font-weight:500; color:#2C1A22; margin-bottom:0.6rem; line-height:1.5; }
+  .radio-group { display:flex; flex-wrap:wrap; gap:1rem; align-items:center; }
+  .radio-group label { font-size:13px; color:#2C1A22; display:flex; align-items:center; gap:5px; cursor:pointer; }
+  .radio-group input[type=radio] { accent-color:#C4708A; width:16px; height:16px; cursor:pointer; }
+  .check-group { display:flex; flex-wrap:wrap; gap:0.75rem; }
+  .check-group label { font-size:13px; color:#2C1A22; display:flex; align-items:center; gap:5px; cursor:pointer; }
+  .check-group input[type=checkbox] { accent-color:#C4708A; width:16px; height:16px; cursor:pointer; }
+  .qual-row { display:flex; align-items:center; gap:0.5rem; margin-top:0.6rem; }
+  .qual-row span { font-size:12px; color:#888; white-space:nowrap; }
+  .qual-row input { flex:1; padding:0.4rem 0.7rem; border:none; border-bottom:1px solid #C4708A; font-family:inherit; font-size:13px; outline:none; background:transparent; color:#2C1A22; }
+  .medidas-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:0.75rem; }
+  @media(max-width:500px){ .medidas-grid{ grid-template-columns:1fr; } }
+  .medida-item { display:flex; flex-direction:column; gap:4px; }
+  .medida-item label { font-size:11px; color:#888; }
+  .medida-item input { padding:0.4rem 0.6rem; border:1px solid #F0D8E0; border-radius:6px; font-family:inherit; font-size:13px; outline:none; }
+  .medida-item input:focus { border-color:#C4708A; }
+  .btn-enviar { width:100%; padding:1rem; background:linear-gradient(135deg,#C4708A,#9E4A65); color:white; border:none; border-radius:10px; font-size:16px; font-weight:600; letter-spacing:1px; cursor:pointer; margin-top:2rem; font-family:inherit; transition:opacity 0.2s; }
+  .btn-enviar:hover { opacity:0.9; }
+  .btn-enviar:disabled { opacity:0.6; cursor:not-allowed; }
+  .sucesso { display:none; background:#E8F5E9; border:2px solid #4CAF50; border-radius:12px; padding:2rem; text-align:center; margin-top:2rem; }
+  .sucesso h2 { color:#2E7D32; font-size:22px; margin-bottom:0.5rem; }
+  .sucesso p { color:#388E3C; font-size:14px; line-height:1.6; }
+  .toast { position:fixed; bottom:2rem; right:2rem; background:#3D1A28; color:#F0C4D0; padding:0.8rem 1.5rem; border-radius:8px; font-size:13px; z-index:9999; opacity:0; transform:translateY(20px); transition:all 0.3s; pointer-events:none; max-width:280px; text-align:center; }
+  .toast.show { opacity:1; transform:translateY(0); }
+  .campo-obrigatorio { color:#C4708A; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Liza Figueiredo</h1>
+  <h2>Estética & Beleza · Ficha de Anamnese</h2>
+</div>
+
+<div class="container">
+
+  <div class="aviso">
+    📋 <strong>Olá!</strong> Preencha os campos abaixo com atenção. Suas informações são confidenciais e essenciais para um atendimento seguro e personalizado.<br><br>
+    Ao clicar em <strong>"Enviar Ficha"</strong>, seus dados serão enviados diretamente para a Liza. <strong>Não é necessário copiar nem enviar nada pelo WhatsApp!</strong> ✨
+  </div>
+
+  <!-- INFORMAÇÕES PESSOAIS -->
+  <div class="section-title">Informações Pessoais</div>
+
+  <div class="form-group">
+    <label>Nome completo <span class="campo-obrigatorio">*</span></label>
+    <input type="text" id="nome" placeholder="Seu nome completo">
+  </div>
+  <div class="form-group">
+    <label>CPF</label>
+    <input type="tel" id="cpf" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCpf(this)">
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Idade</label>
+      <input type="number" id="idade" placeholder="Ex: 32" min="1" max="120">
+    </div>
+    <div class="form-group">
+      <label>Gênero</label>
+      <select id="genero">
+        <option value="">Selecione...</option>
+        <option>Feminino</option>
+        <option>Masculino</option>
+        <option>Outro</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Data de nascimento</label>
+    <input type="date" id="dataNasc">
+  </div>
+  <div class="form-group">
+    <label>Telefone (WhatsApp) <span class="campo-obrigatorio">*</span></label>
+    <input type="tel" id="telefone" placeholder="(xx) xxxxx-xxxx" oninput="mascaraTel(this)">
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Tem filhos?</label>
+      <select id="filhos">
+        <option value="">-</option>
+        <option value="sim">Sim</option>
+        <option value="não">Não</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Data (último parto)</label>
+      <input type="date" id="dataFilhos">
+    </div>
+  </div>
+
+  <!-- HISTÓRICO DE SAÚDE -->
+  <div class="section-title">Histórico de Saúde</div>
+
+  <div class="question-block">
+    <div class="question-label">• Possui alguma doença diagnosticada?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="doenca" value="sim"> Sim</label>
+      <label><input type="radio" name="doenca" value="não"> Não</label>
+    </div>
+    <div class="qual-row"><span>Qual?</span><input type="text" id="doencaQual" placeholder="Descreva..."></div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Usa medicação contínua?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="medicacao" value="sim"> Sim</label>
+      <label><input type="radio" name="medicacao" value="não"> Não</label>
+    </div>
+    <div class="qual-row"><span>Qual?</span><input type="text" id="medicacaoQual" placeholder="Descreva..."></div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Algum produto injetado no corpo?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="injetado" value="sim"> Sim</label>
+      <label><input type="radio" name="injetado" value="não"> Não</label>
+    </div>
+    <div class="qual-row"><span>Qual?</span><input type="text" id="injetadoQual" placeholder="Descreva..."></div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Já realizou alguma cirurgia?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="cirurgia" value="sim"> Sim</label>
+      <label><input type="radio" name="cirurgia" value="não"> Não</label>
+    </div>
+    <div class="qual-row"><span>Qual / Quando?</span><input type="text" id="cirurgiaQual" placeholder="Descreva..."></div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Tem alergia a algum produto ou substância?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="alergia" value="sim"> Sim</label>
+      <label><input type="radio" name="alergia" value="não"> Não</label>
+    </div>
+    <div class="qual-row"><span>Qual?</span><input type="text" id="alergiaQual" placeholder="Descreva..."></div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Possui marcapasso ou próteses metálicas?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="marcapasso" value="sim"> Sim</label>
+      <label><input type="radio" name="marcapasso" value="não"> Não</label>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Tem problemas circulatórios (varizes, má circulação, linfedema...)?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="circulatorio" value="sim"> Sim</label>
+      <label><input type="radio" name="circulatorio" value="não"> Não</label>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Tem hipertensão?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="hipertensao" value="sim"> Sim</label>
+      <label><input type="radio" name="hipertensao" value="não"> Não</label>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Tem diabetes?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="diabetes" value="sim"> Sim</label>
+      <label><input type="radio" name="diabetes" value="não"> Não</label>
+    </div>
+  </div>
+
+  <!-- HORMONAL -->
+  <div class="section-title">Parte Hormonal e Hormônios</div>
+
+  <div class="question-block">
+    <div class="question-label">• Ciclo menstrual:</div>
+    <div class="radio-group">
+      <label><input type="radio" name="ciclo" value="Regular"> Regular</label>
+      <label><input type="radio" name="ciclo" value="Irregular"> Irregular</label>
+      <label><input type="radio" name="ciclo" value="Menopausa"> Menopausa</label>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Está grávida ou amamentando?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="gravida" value="sim"> Sim</label>
+      <label><input type="radio" name="gravida" value="não"> Não</label>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Utiliza anticoncepcional?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="anticoncepcional" value="sim"> Sim</label>
+      <label><input type="radio" name="anticoncepcional" value="não"> Não</label>
+    </div>
+    <div class="qual-row"><span>Qual?</span><input type="text" id="antiQual" placeholder="Descreva..."></div>
+  </div>
+
+  <!-- HÁBITOS -->
+  <div class="section-title">Hábitos de Vida</div>
+
+  <div class="question-block">
+    <div class="question-label">• Quantos litros de água bebe por dia?</div>
+    <input type="text" id="agua" placeholder="Ex: 2L" style="margin-top:0.5rem;width:100%;padding:0.5rem 0.8rem;border:1px solid #F0D8E0;border-radius:8px;font-family:inherit;font-size:13px;outline:none;">
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Como é sua alimentação?</div>
+    <div class="radio-group" style="margin-top:0.4rem">
+      <label><input type="radio" name="alimentacao" value="saudavel"> Saudável</label>
+      <label><input type="radio" name="alimentacao" value="regular"> Regular</label>
+      <label><input type="radio" name="alimentacao" value="ruim"> Ruim</label>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Pratica atividade física?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="atividade" value="sim"> Sim</label>
+      <label><input type="radio" name="atividade" value="não"> Não</label>
+    </div>
+    <div class="qual-row"><span>Qual?</span><input type="text" id="atividadeQual" placeholder="Ex: Musculação, caminhada..."></div>
+    <div class="qual-row"><span>Frequência:</span><input type="text" id="atividadeFreq" placeholder="Ex: 3x por semana"></div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Consome bebida alcoólica?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="alcool" value="sim"> Sim</label>
+      <label><input type="radio" name="alcool" value="não"> Não</label>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Fuma?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="fuma" value="sim"> Sim</label>
+      <label><input type="radio" name="fuma" value="não"> Não</label>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-label">• Usa cinta modeladora?</div>
+    <div class="radio-group">
+      <label><input type="radio" name="cinta" value="sim"> Sim</label>
+      <label><input type="radio" name="cinta" value="não"> Não</label>
+    </div>
+  </div>
+
+  <!-- O QUE INCOMODA -->
+  <div class="section-title">Queixa Principal</div>
+  <div class="question-block">
+    <div class="question-label">• O que mais te incomoda no seu corpo? O que deseja melhorar?</div>
+    <textarea id="incomoda" rows="4" placeholder="Descreva aqui suas principais queixas e objetivos..." style="margin-top:0.5rem;width:100%;padding:0.6rem 0.8rem;border:1px solid #F0D8E0;border-radius:8px;font-family:inherit;font-size:13px;outline:none;resize:vertical;"></textarea>
+  </div>
+
+  <!-- BOTÃO -->
+  <button class="btn-enviar" id="btnEnviar" onclick="enviarFicha()">✅ Enviar Ficha para a Liza</button>
+
+  <!-- TELA DE SUCESSO -->
+  <div class="sucesso" id="telaSuccesso">
+    <div style="font-size:48px;margin-bottom:1rem">🌸</div>
+    <h2>Ficha enviada com sucesso!</h2>
+    <p>Obrigada, <strong id="nomeSuccesso"></strong>!<br><br>
+    Sua ficha de anamnese foi recebida pela Liza e já está no sistema dela.<br>
+    Você não precisa fazer mais nada. Até breve! ✨</p>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SUPA_URL = 'https://clxtlgkzsdzmqbvhkwft.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNseHRsZ2t6c2R6bXFidmhrd2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5OTI4NTksImV4cCI6MjA5MzU2ODg1OX0.QqjhvC5Y9yp7RohU4oPo5L5lx4IIWnGa8OmIdyuD4Ag';
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
+
+function getRadio(name) {
+  var el = document.querySelector('input[name="'+name+'"]:checked');
+  return el ? el.value : '';
+}
+function getVal(id) {
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+function getSel(id) {
+  var el = document.getElementById(id);
+  return el ? el.value : '';
+}
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 4000);
+}
+function mascaraCpf(el) {
+  var v = el.value.replace(/\D/g,'').slice(0,11);
+  if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/,'$1.$2.$3-$4');
+  else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{0,3})/,'$1.$2.$3');
+  else if (v.length > 3) v = v.replace(/(\d{3})(\d{0,3})/,'$1.$2');
+  el.value = v;
+}
+function mascaraTel(el) {
+  var v = el.value.replace(/\D/g,'').substring(0,11);
+  if (v.length <= 10) v = v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3');
+  else v = v.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3');
+  el.value = v;
+}
+
+async function enviarFicha() {
+  var nome = getVal('nome');
+  var telefone = getVal('telefone');
+
+  if (!nome) { showToast('⚠️ Por favor, preencha seu nome!'); return; }
+  if (!telefone) { showToast('⚠️ Por favor, preencha seu telefone!'); return; }
+
+  var btn = document.getElementById('btnEnviar');
+  btn.disabled = true;
+  btn.textContent = '⏳ Enviando...';
+
+  // Monta o objeto exatamente igual ao sistema da Liza (salvarFichaAnamnese)
+  var ficha = {
+    id: uid(),
+    data_cadastro: new Date().toLocaleDateString('pt-BR'),
+    pessoais: {
+      nome: nome,
+      idade: getVal('idade'),
+      genero: getSel('genero'),
+      dataNasc: getVal('dataNasc'),
+      telefone: telefone,
+      cpf: getVal('cpf'),
+      filhos: getSel('filhos'),
+      dataFilhos: getVal('dataFilhos')
+    },
+    saude: {
+      doenca: getRadio('doenca'),
+      doencaQual: getVal('doencaQual'),
+      medicacao: getRadio('medicacao'),
+      medicacaoQual: getVal('medicacaoQual'),
+      injetado: getRadio('injetado'),
+      injetadoQual: getVal('injetadoQual'),
+      cirurgia: getRadio('cirurgia'),
+      cirurgiaQual: getVal('cirurgiaQual'),
+      alergia: getRadio('alergia'),
+      alergiaQual: getVal('alergiaQual'),
+      marcapasso: getRadio('marcapasso'),
+      circulatorio: getRadio('circulatorio'),
+      hipertensao: getRadio('hipertensao'),
+      diabetes: getRadio('diabetes')
+    },
+    hormonal: {
+      ciclo: getRadio('ciclo'),
+      gravida: getRadio('gravida'),
+      anti: getRadio('anticoncepcional'),
+      antiQual: getVal('antiQual')
+    },
+    habitos: {
+      agua: getVal('agua'),
+      alimentacao: getRadio('alimentacao'),
+      atividade: getRadio('atividade'),
+      atividadeQual: getVal('atividadeQual'),
+      atividadeFreq: getVal('atividadeFreq'),
+      alcool: getRadio('alcool'),
+      fuma: getRadio('fuma'),
+      cinta: getRadio('cinta')
+    },
+    incomoda: getVal('incomoda'),
+    av_fisica: {},
+    av_corporal: {},
+    atualizado_em: new Date().toISOString()
+  };
+
+  try {
+    var resp = await fetch(SUPA_URL + '/rest/v1/anamneses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + SUPA_KEY,
+        'Prefer': 'resolution=merge-duplicates,return=minimal'
+      },
+      body: JSON.stringify(ficha)
+    });
+
+    if (resp.ok) {
+      // Sucesso
+      document.getElementById('nomeSuccesso').textContent = nome.split(' ')[0];
+      document.getElementById('telaSuccesso').style.display = 'block';
+      btn.style.display = 'none';
+      document.getElementById('telaSuccesso').scrollIntoView({ behavior: 'smooth' });
+    } else {
+      var err = await resp.text();
+      console.error('Erro Supabase:', err);
+      showToast('❌ Erro ao enviar. Tente novamente.');
+      btn.disabled = false;
+      btn.textContent = '✅ Enviar Ficha para a Liza';
+    }
+  } catch(e) {
+    console.error('Erro de rede:', e);
+    showToast('❌ Sem conexão. Verifique sua internet e tente novamente.');
+    btn.disabled = false;
+    btn.textContent = '✅ Enviar Ficha para a Liza';
+  }
+}
+</script>
+</body>
+</html>
